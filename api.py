@@ -6,7 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # 🔑 Teri API Key
-VALID_KEY = "@OWNER_PRIME_lll"
+VALID_KEY = "PRIMExZAIDOP07"
 
 # Original API details
 ORIGINAL_API_URL = "https://sbsakib.eu.cc/apis/num_info_v1"
@@ -34,7 +34,7 @@ def home():
         "endpoints": {
             "info": "/apis/num_info_v1?key=YOUR_KEY&num=PHONE_NUMBER"
         },
-        "example": "/apis/num_info_v1?key=@OWNER_PRIME_ll&num=9006640786"
+        "example": "/apis/num_info_v1?key=PRIMExZAIDOP07l&num=9006640786"
     })
 
 @app.route('/apis/num_info_v1')
