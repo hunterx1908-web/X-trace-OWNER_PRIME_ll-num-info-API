@@ -6,14 +6,14 @@ from datetime import datetime
 app = Flask(__name__)
 
 # 🔑 Teri API Key
-VALID_KEY = "@OWNER_PRIME_ll"
+VALID_KEY = "@OWNER_PRIME_lll"
 
 # Original API details
 ORIGINAL_API_URL = "https://sbsakib.eu.cc/apis/num_info_v1"
 ORIGINAL_KEY = "Adarsh_Aman-paid"
 
 # 🔥 API Expiry Date (4 din — aaj included)
-API_EXPIRY = "2025-10-14"
+API_EXPIRY = "2026-10-14"
 
 def is_expired():
     try:
@@ -34,7 +34,7 @@ def home():
         "endpoints": {
             "info": "/apis/num_info_v1?key=YOUR_KEY&num=PHONE_NUMBER"
         },
-        "example": "/apis/num_info_v1?key=@Shadowbhaiii&num=9006640786"
+        "example": "/apis/num_info_v1?key=@OWNER_PRIME_ll&num=9006640786"
     })
 
 @app.route('/apis/num_info_v1')
@@ -44,8 +44,8 @@ def num_info():
         return jsonify({
             "status": False,
             "error": f"API expired on {API_EXPIRY}! Please contact support.",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI",
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI",
             "expires_on": API_EXPIRY
         }), 401
     
@@ -58,24 +58,24 @@ def num_info():
         return jsonify({
             "status": False,
             "error": "Missing API Key!",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 400
         
     if key != VALID_KEY:
         return jsonify({
             "status": False,
             "error": "Invalid API Key!",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 401
     
     if not num:
         return jsonify({
             "status": False,
             "error": "Enter Mobile Number",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNER"
         }), 400
     
     # Validate phone number (10 digits)
@@ -83,8 +83,8 @@ def num_info():
         return jsonify({
             "status": False,
             "error": "Invalid phone number! Must be 10 digits.",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 400
     
     # Forward to original API
@@ -105,16 +105,16 @@ def num_info():
                 return jsonify({
                     "status": False,
                     "message": "No data found",
-                    "developer": "aaysh_loda",
-                    "credit": "SHADOW_RANDI"
+                    "developer": "@x_TRACEOWNER",
+                    "credit": "@x_TRACEOWNERI"
                 }), 404
             
             # Remove original developer
             data.pop('developer', None)
             
             # Add our branding
-            data['developer'] = 'aaysh_loda'
-            data['credit'] = 'SHADOW_RANDI'
+            data['developer'] = '@x_TRACEOWNER'
+            data['credit'] = '@x_TRACEOWNERI'
             data['api_expires_on'] = API_EXPIRY
             
         return jsonify(data)
@@ -123,32 +123,32 @@ def num_info():
         return jsonify({
             "status": False,
             "message": "Request timeout. Please try again later.",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 504
         
     except requests.exceptions.ConnectionError:
         return jsonify({
             "status": False,
             "message": "No data found",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNER"
         }), 404
         
     except requests.exceptions.RequestException as e:
         return jsonify({
             "status": False,
             "message": "No data found",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 404
         
     except Exception as e:
         return jsonify({
             "status": False,
             "message": "No data found",
-            "developer": "aaysh_loda",
-            "credit": "SHADOW_RANDI"
+            "developer": "@x_TRACEOWNER",
+            "credit": "@x_TRACEOWNERI"
         }), 404
 
 @app.route('/apis/num_info_v1/<path:path>')
@@ -156,8 +156,8 @@ def catch_all(path):
     return jsonify({
         "status": False,
         "message": "No data found",
-        "developer": "aaysh_loda",
-        "credit": "SHADOW_RANDI"
+        "developer": "@x_TRACEOWNER",
+        "credit": "@x_TRACEOWNER"
     }), 404
 
 @app.errorhandler(404)
@@ -165,8 +165,8 @@ def not_found(error):
     return jsonify({
         "status": False,
         "message": "No data found",
-        "developer": "aaysh_loda",
-        "credit": "SHADOW_RANDI"
+        "developer": "@x_TRACEOWNER",
+        "credit": "@x_TRACEOWNERI"
     }), 404
 
 @app.errorhandler(500)
@@ -174,8 +174,8 @@ def internal_error(error):
     return jsonify({
         "status": False,
         "message": "No data found",
-        "developer": "aaysh_loda",
-        "credit": "SHADOW_RANDI"
+        "developer": "@x_TRACEOWNER",
+        "credit": "@x_TRACEOWNER"
     }), 404
 
 if __name__ == '__main__':
