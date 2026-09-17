@@ -8,11 +8,11 @@ app = Flask(__name__)
 # 🔑 Teri API Key
 VALID_KEY = "PRIMExZAIDOP07"
 
-# Original API details
+# 🔥 Original API details
 ORIGINAL_API_URL = "https://sbsakib.eu.cc/apis/num_info_v1"
 ORIGINAL_KEY = "Adarsh_Aman-paid"
 
-# 🔥 API Expiry Date (4 din — aaj included)
+# 🔥 API Expiry Date (14 December 2099)
 API_EXPIRY = "2026-10-14"
 
 def is_expired():
@@ -27,14 +27,14 @@ def home():
     return jsonify({
         "status": True,
         "message": "Number Info API is working! (X-TRACE Edition)",
-        "developer": "aaysh_loda",
+        "developer": "@x_TRACEOWNER",
         "credit": "@x_TRACEOWNER",
         "expires_on": API_EXPIRY,
         "status": "Active" if not is_expired() else "Expired",
         "endpoints": {
             "info": "/apis/num_info_v1?key=YOUR_KEY&num=PHONE_NUMBER"
         },
-        "example": "/apis/num_info_v1?key=PRIMExZAIDOP07l&num=9006640786"
+        "example": "/apis/num_info_v1?key=PRIMExZAIDOP07&num=9006640786"
     })
 
 @app.route('/apis/num_info_v1')
@@ -43,9 +43,9 @@ def num_info():
     if is_expired():
         return jsonify({
             "status": False,
-            "error": f"API expired on {API_EXPIRY}! Please contact support.",
+            "error": f"API expired on {API_EXPIRY}!",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI",
+            "credit": "@x_TRACEOWNER",
             "expires_on": API_EXPIRY
         }), 401
     
@@ -59,7 +59,7 @@ def num_info():
             "status": False,
             "error": "Missing API Key!",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
+            "credit": "@x_TRACEOWNER"
         }), 400
         
     if key != VALID_KEY:
@@ -67,7 +67,7 @@ def num_info():
             "status": False,
             "error": "Invalid API Key!",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
+            "credit": "@x_TRACEOWNER"
         }), 401
     
     if not num:
@@ -84,71 +84,64 @@ def num_info():
             "status": False,
             "error": "Invalid phone number! Must be 10 digits.",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
+            "credit": "@x_TRACEOWNER"
         }), 400
     
-    # Forward to original API
-    params = {
-        'key': ORIGINAL_KEY,
-        'num': num
-    }
-    
+    # 🔥 Direct forward — original API ka response waise ka waasa
     try:
-        response = requests.get(ORIGINAL_API_URL, params=params, timeout=10)
+        params = {
+            'key': ORIGINAL_KEY,
+            'num': num
+        }
+        
+        # 🔥 Timeout 60 seconds (Vercel Pro mein max 60 sec allowed)
+        response = requests.get(ORIGINAL_API_URL, params=params, timeout=60)
         response.raise_for_status()
         data = response.json()
         
-        # 🔥 Clean response
+        # 🔥 Clean response — sirf developer/credit replace karo
         if isinstance(data, dict):
-            # Check if total_results is 0 (no data found)
-            if data.get('total_results') == 0:
-                return jsonify({
-                    "status": False,
-                    "message": "No data found",
-                    "developer": "@x_TRACEOWNER",
-                    "credit": "@x_TRACEOWNERI"
-                }), 404
-            
-            # Remove original developer
+            # Original developer hatao
             data.pop('developer', None)
             
-            # Add our branding
+            # Apna branding add karo
             data['developer'] = '@x_TRACEOWNER'
-            data['credit'] = '@x_TRACEOWNERI'
+            data['credit'] = '@x_TRACEOWNER'
             data['api_expires_on'] = API_EXPIRY
-            
+        
         return jsonify(data)
         
     except requests.exceptions.Timeout:
+        # 🔥 Timeout pe bhi original API ka response nahi, clean message
         return jsonify({
             "status": False,
             "message": "Request timeout. Please try again later.",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
+            "credit": "@x_TRACEOWNER"
         }), 504
         
     except requests.exceptions.ConnectionError:
         return jsonify({
             "status": False,
-            "message": "No data found",
+            "message": "Request timeout. Please try again later.",
             "developer": "@x_TRACEOWNER",
             "credit": "@x_TRACEOWNER"
-        }), 404
+        }), 504
         
     except requests.exceptions.RequestException as e:
         return jsonify({
             "status": False,
-            "message": "No data found",
+            "message": "Request timeout. Please try again later.",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
-        }), 404
+            "credit": "@x_TRACEOWNER"
+        }), 504
         
     except Exception as e:
         return jsonify({
             "status": False,
             "message": "No data found",
             "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNERI"
+            "credit": "@x_TRACEOWNER"
         }), 404
 
 @app.route('/apis/num_info_v1/<path:path>')
@@ -166,7 +159,7 @@ def not_found(error):
         "status": False,
         "message": "No data found",
         "developer": "@x_TRACEOWNER",
-        "credit": "@x_TRACEOWNERI"
+        "credit": "@x_TRACEOWNER"
     }), 404
 
 @app.errorhandler(500)
@@ -176,7 +169,7 @@ def internal_error(error):
         "message": "No data found",
         "developer": "@x_TRACEOWNER",
         "credit": "@x_TRACEOWNER"
-    }), 404
+    }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
