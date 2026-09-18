@@ -8,11 +8,11 @@ app = Flask(__name__)
 # 🔑 Teri API Key
 VALID_KEY = "PRIMExZAIDOP07"
 
-# 🔥 Original API details
-ORIGINAL_API_URL = "https://sbsakib.eu.cc/apis/num_info_v1"
-ORIGINAL_KEY = "Adarsh_Aman-paid"
+# Original API details
+ORIGINAL_API_URL = "https://shuru-num-to-info-2-months-rxmodz00.vercel.app/apis/num_info_v1"
+ORIGINAL_KEY = "@rxmodz007"
 
-# 🔥 API Expiry Date (14 December 2099)
+# 🔥 API Expiry Date (Apni marzi se set kar)
 API_EXPIRY = "2026-10-14"
 
 def is_expired():
@@ -43,68 +43,41 @@ def num_info():
     if is_expired():
         return jsonify({
             "status": False,
-            "error": f"API expired on {API_EXPIRY}!",
+            "error": f"API expired on {API_EXPIRY}! Please contact support.",
             "developer": "@x_TRACEOWNER",
             "credit": "@x_TRACEOWNER",
             "expires_on": API_EXPIRY
         }), 401
     
-    # Get parameters
     key = request.args.get('key')
     num = request.args.get('num')
     
     # 🔐 Key verify
     if not key:
-        return jsonify({
-            "status": False,
-            "error": "Missing API Key!",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 400
+        return jsonify({"status": False, "error": "Missing API Key!", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 400
         
     if key != VALID_KEY:
-        return jsonify({
-            "status": False,
-            "error": "Invalid API Key!",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 401
+        return jsonify({"status": False, "error": "Invalid API Key!", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 401
     
     if not num:
-        return jsonify({
-            "status": False,
-            "error": "Enter Mobile Number",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 400
+        return jsonify({"status": False, "error": "Enter Mobile Number", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 400
     
-    # Validate phone number (10 digits)
     if not num.isdigit() or len(num) != 10:
-        return jsonify({
-            "status": False,
-            "error": "Invalid phone number! Must be 10 digits.",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 400
+        return jsonify({"status": False, "error": "Invalid phone number! Must be 10 digits.", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 400
     
-    # 🔥 Direct forward — original API ka response waise ka waasa
+    # 🔥 Forward to original API
     try:
-        params = {
-            'key': ORIGINAL_KEY,
-            'num': num
-        }
-        
-        # 🔥 Timeout 60 seconds (Vercel Pro mein max 60 sec allowed)
+        params = {'key': ORIGINAL_KEY, 'num': num}
         response = requests.get(ORIGINAL_API_URL, params=params, timeout=60)
         response.raise_for_status()
         data = response.json()
         
-        # 🔥 Clean response — sirf developer/credit replace karo
+        # 🔥 Clean response
         if isinstance(data, dict):
-            # Original developer hatao
+            data.pop('expiry_date', None)
+            data.pop('days_left', None)
             data.pop('developer', None)
-            
-            # Apna branding add karo
+            data.pop('Credits', None)
             data['developer'] = '@x_TRACEOWNER'
             data['credit'] = '@x_TRACEOWNER'
             data['api_expires_on'] = API_EXPIRY
@@ -112,64 +85,28 @@ def num_info():
         return jsonify(data)
         
     except requests.exceptions.Timeout:
-        # 🔥 Timeout pe bhi original API ka response nahi, clean message
-        return jsonify({
-            "status": False,
-            "message": "Request timeout. Please try again later.",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 504
+        return jsonify({"status": False, "message": "Request timeout. Please try again later.", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 504
         
     except requests.exceptions.ConnectionError:
-        return jsonify({
-            "status": False,
-            "message": "Request timeout. Please try again later.",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 504
+        return jsonify({"status": False, "message": "Request timeout. Please try again later.", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 504
         
-    except requests.exceptions.RequestException as e:
-        return jsonify({
-            "status": False,
-            "message": "Request timeout. Please try again later.",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 504
+    except requests.exceptions.RequestException:
+        return jsonify({"status": False, "message": "No data found", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 404
         
-    except Exception as e:
-        return jsonify({
-            "status": False,
-            "message": "No data found",
-            "developer": "@x_TRACEOWNER",
-            "credit": "@x_TRACEOWNER"
-        }), 404
+    except Exception:
+        return jsonify({"status": False, "message": "No data found", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 404
 
 @app.route('/apis/num_info_v1/<path:path>')
 def catch_all(path):
-    return jsonify({
-        "status": False,
-        "message": "No data found",
-        "developer": "@x_TRACEOWNER",
-        "credit": "@x_TRACEOWNER"
-    }), 404
+    return jsonify({"status": False, "message": "No data found", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 404
 
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({
-        "status": False,
-        "message": "No data found",
-        "developer": "@x_TRACEOWNER",
-        "credit": "@x_TRACEOWNER"
-    }), 404
+    return jsonify({"status": False, "message": "No data found", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    return jsonify({
-        "status": False,
-        "message": "No data found",
-        "developer": "@x_TRACEOWNER",
-        "credit": "@x_TRACEOWNER"
-    }), 500
+    return jsonify({"status": False, "message": "No data found", "developer": "@x_TRACEOWNER", "credit": "@x_TRACEOWNER"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
